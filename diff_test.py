@@ -7,24 +7,23 @@ import numpy as np
 
 stream = imutils.video.WebcamVideoStream()
 stream.start()
-# shape = stream.frame.shape
-# black = np.zeros(shape, dtype="uint8")
+shape = stream.frame.shape
+black = np.zeros(shape, dtype="uint8")
 
 frame = stream.read()
+new_frame = frame
 
 while True:
-    sleep(1.0 / 30.0)
-
     prev_frame = new_frame
-    new_frame = stream.read()
+    new_frame = stream.stream.read(True)[1]
 
     diff = cv2.absdiff(prev_frame, new_frame)
 
-    mask = cv2.GaussianBlur(diff, (5,5), 0)
+    # mask = cv2.GaussianBlur(diff, (5,5), 0)
+    # frame = (np.clip(diff, 20, 255) - 20) * 2
+    frame = diff
+    # frame = cv2.fastNlMeansDenoisingColored(diff,None,10,10,7,21)
 
-    frame = np.clip(mask * 10, 0, 255)
-    # frame = diff * 100
-    # frame = 255 - diff
 
     cv2.imshow("window", frame)
     if cv2.waitKey(1) > 0:
