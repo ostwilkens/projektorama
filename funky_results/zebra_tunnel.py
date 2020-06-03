@@ -1,7 +1,11 @@
 # pylint: disable=invalid-name,missing-module-docstring
 
-# #%%
-# import cv2
+#%%
+from time import sleep
+import imutils.video
+import cv2
+import numpy as np
+
 # cap = cv2.VideoCapture(0)
 # # cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
 # # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
@@ -9,14 +13,6 @@
 # cap.set(cv2.CAP_PROP_AUTOFOCUS,0)
 # cap.set(cv2.CAP_PROP_FOCUS,10)
 # cap.set(cv2.CAP_PROP_EXPOSURE,5)
-
-#%%
-from time import sleep
-import imutils.video
-import cv2
-import numpy as np
-from datetime import datetime
-from math import sin, cos, tan
 
 stream = imutils.video.WebcamVideoStream()
 stream.start()
@@ -29,11 +25,13 @@ new_frame = frame
 cv2.namedWindow("window", cv2.WND_PROP_FULLSCREEN)
 cv2.setWindowProperty("window",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
-start_time = datetime.now()
-
 while True:
-    elapsed = (datetime.now() - start_time).total_seconds()
-    n = elapsed * 2
+    # this effect requires:
+    # slightly expanded crop
+    # b/w setting on cam
+    # min exposure
+    # min gain
+
     prev_frame = new_frame
     new_frame = stream.stream.read(True)[1]
 
@@ -50,12 +48,10 @@ while True:
 
     frame = 255 - frame #invert
 
-    # margin = -20 + int(sin(n) * 20) 
     margin = -10
 
-
-    x = 170 + margin # + int(sin(n * 0.8) * 10) 
-    y = 125 + margin # + int(cos(n * 0.5) * 10)
+    x = 170 + margin
+    y = 125 + margin
     w = 318 - margin * 2
     h = 220 - margin * 2
     frame = frame[y:y+h, x:x+w]
